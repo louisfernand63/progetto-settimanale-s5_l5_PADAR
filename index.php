@@ -38,3 +38,35 @@ Seguire le best practices della programmazione orientata agli oggetti per garant
 */
 require_once('database.php');
 $config = require_once('config.php');
+$pdo = new PDO($config['dsn'], $config['username'], $config['password']);
+$database = new Database($pdo);
+
+session_start();
+
+$user = $_SESSION['user'] ?? null;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+    
+    $user = $database->getUserByEmail($email);
+    
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user'] = $user;
+        header('Location: home.php');
+        exit;
+}}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col

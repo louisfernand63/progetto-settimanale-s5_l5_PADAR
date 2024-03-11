@@ -37,6 +37,34 @@ Note:
 Seguire le best practices della programmazione orientata agli oggetti per garantire una struttura modulare, manutenibile e scalabile dell'applicazione.
 */
 
+// UserManager.php
 
-// PDO -> Php Data Object
-require_once('database.php');
+class UserManager
+{
+    private $pdo;
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    public function getUserByUsername($username)
+    {
+        $statement = $this->pdo->prepare("SELECT * FROM users WHERE username = ?");
+        $statement->execute([$username]);
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function createUser($username, $password)
+    {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $statement = $this->pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
+        $statement->execute([$username, $hashedPassword]);
+        return $this->pdo->lastInsertId();
+    }
+public function updateUserPassword($username, $newPassword)
+    {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $statement = $this->pdo->prepare("UPDATE users SET password = ? WHERE username = ?");
+        $statement->execute([$hashedPassword, $username]);
+    }
+}

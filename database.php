@@ -1,5 +1,7 @@
 <?php
-/* Creare un pannello di amministrazione dati ad accesso riservato Descrizione del Progetto: Si richiede di sviluppare un'applicazione web in PHP che permetta agli utenti autorizzati di accedere a un pannello di amministrazione per gestire dati sensibili in un database. L'applicazione dovrà essere sviluppata utilizzando il paradigma di programmazione orientata agli oggetti.
+/* Creare un pannello di amministrazione dati ad accesso riservato 
+Descrizione del Progetto: 
+Si richiede di sviluppare un'applicazione web in PHP che permetta agli utenti autorizzati di accedere a un pannello di amministrazione per gestire dati sensibili in un database. L'applicazione dovrà essere sviluppata utilizzando il paradigma di programmazione orientata agli oggetti.
 
 Requisiti Funzionali: 
 
@@ -38,35 +40,28 @@ Seguire le best practices della programmazione orientata agli oggetti per garant
 */
 
 namespace db {
-
     use PDO;
-
-    class DB_PDO
-    {
+    class DB_PDO {
         // Classe con pattern Singleton
         private PDO $conn;
         private static ?DB_PDO $instance = null;
 
-        private function __construct(array $config)
-        {
-            // 'mysql:host=localhost; port=3306; dbname=padar
+        private function __construct(array $config){
+            // 'mysql:host=localhost; port=3306; dbname=biblioteca
             $this->conn = new PDO(
-                $config['driver'] . ":host=" . $config['host'] . "; port=" . $config['port'] . "; dbname=" . $config['database'] . ";",
-                $config['user'],
-                $config['password']
-            );
+                                    $config['driver'].":host=".$config['host']."; port=".$config['port']."; dbname=".$config['database'].";", 
+                                    $config['user'], 
+                                    $config['password']);
         }
 
-        public static function getInstance(array $config)
-        {
-            if (!static::$instance) {
+        public static function getInstance(array $config){
+            if(!static::$instance) {
                 static::$instance = new DB_PDO($config);
             }
             return static::$instance;
         }
 
-        public function getConnection()
-        {
+        public function getConnection(){
             return $this->conn;
         }
     }
